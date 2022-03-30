@@ -1,0 +1,44 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "movies-explorer-api",
+  "level-1": "app.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Dobriak Diana",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.2",
+    "celebrate": "^15.0.1",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "editorconfig": "^0.15.3",
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "express": "^4.17.3",
+    "express-winston": "^4.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.8",
+    "package.json": "^2.0.1",
+    "validator": "^13.7.0",
+    "winston": "^3.6.0"
+  },
+  "main": "app.js",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DianaDobriak25/movies-explorer-api.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DianaDobriak25/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/DianaDobriak25/movies-explorer-api#readme"
+}

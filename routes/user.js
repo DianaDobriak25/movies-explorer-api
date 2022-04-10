@@ -6,7 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 // возвращаем информацию о пользователе
 const { usersFindInform } = require('../controllers/user');
 
-router.get('/me', celebrate({
+router.get('/users/me', celebrate({
   body: Joi.object().keys({
     email: Joi.string().min(2).max(30).required(true)
       .lowercase()
@@ -18,7 +18,7 @@ router.get('/me', celebrate({
 // Обновляем информацию о пользователе
 const { usersUpdateInform } = require('../controllers/user');
 
-router.patch('/me', celebrate({
+router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     email: Joi.string().min(2).max(30).required(true)
       .lowercase()

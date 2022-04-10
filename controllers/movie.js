@@ -16,7 +16,7 @@ module.exports.movieFind = (req, res, next) => {
 module.exports.movieCreate = (req, res, next) => {
   const {
     country, director, duration, year, description,
-    image, trailer, nameRU, nameEN, thumbnail, movieId,
+    image, trailerLink, nameRU, nameEN, thumbnail, movieId,
   } = req.body;
   // получим из объекта запроса данные
   // создаем документ в коллекцию БД
@@ -28,7 +28,7 @@ module.exports.movieCreate = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -42,7 +42,7 @@ module.exports.movieCreate = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       } else {
-        next(); // иначе будет выведена ошибка 500
+        next(err); // иначе будет выведена ошибка 500
       }
     });
 };
@@ -66,7 +66,7 @@ module.exports.movieDeleteById = (req, res, next) => {
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       } else {
-        next(); // иначе будет выведена ошибка 500
+        next(err); // иначе будет выведена ошибка 500
       }
     });
 };

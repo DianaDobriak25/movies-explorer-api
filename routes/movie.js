@@ -7,12 +7,12 @@ const { validateURL } = require('../utils/custom-validator');
 // возвращает все сохранённые текущим пользователем фильмы
 const { movieFind } = require('../controllers/movie');
 
-router.get('/', movieFind);
+router.get('/movies', movieFind);
 
 // создаёт фильм
 const { movieCreate } = require('../controllers/movie');
 
-router.post('/', celebrate({
+router.post('/movies', celebrate({
   body: Joi.object().keys({
     country: Joi.string().min(2).max(30).required(true),
     director: Joi.string().min(2).max(30).required(true),
@@ -24,14 +24,14 @@ router.post('/', celebrate({
     nameRU: Joi.string().required(true),
     nameEN: Joi.string().required(true),
     thumbnail: Joi.string().required(true).custom(validateURL),
-    movieId: Joi.string().hex().length(24).required(true),
+    movieId: Joi.number().required(true),
   }),
 }), movieCreate);
 
 // удаляет сохранённый фильм по id
 const { movieDeleteById } = require('../controllers/movie');
 
-router.delete('/:id', celebrate({
+router.delete('/movies/:id', celebrate({
   params: Joi.object().keys({
     id: Joi.string().length(24).hex(),
   }),

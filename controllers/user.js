@@ -9,13 +9,12 @@ const { JWT_SECRET } = require('../config');
 // Обработчик запроса и ошибок.
 // сработает при GET-запросе, возвращает информацию о пользователе (email и имя)
 module.exports.usersFindInform = (req, res, next) => {
-  const { email, name } = req.body;
-  User.find(
-    req.user._id,
-    { email, name },
-  )
+  User.findById(req.user._id)
     .orFail(new NotFoundError('Ресурс не найден'))
-    .then((user) => res.send(user))
+    .then((user) => res.send({
+      email: user.email,
+      name: user.name,
+    }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Неверный формат данных'));
@@ -44,8 +43,10 @@ module.exports.usersUpdateInform = (req, res, next) => {
         next(new BadRequestError('Неверный формат данных'));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с данным email уже существует'));
       } else {
-        next(); // иначе будет выведена ошибка 500
+        next(err); // иначе будет выведена ошибка 500
       }
     });
 };

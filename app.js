@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const apiLimiter = require('./rate-limiter');
 const errorHandler = require('./middleware/error-handler');
-const auth = require('./middleware/auth');
 const { PORT, DB_ADDRESS } = require('./config');
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const celebreteErrors = require('./middleware/celebrete-errors');
@@ -19,7 +18,7 @@ mongoose.connect(DB_ADDRESS, {
   useUnifiedTopology: true,
 });
 
-app.use(errorLogger); // подключаем логгер ошибок
+app.use(requestLogger); // подключаем логгер запросов
 app.use(apiLimiter);
 
 // мидлвэр body-parser. Он самостоятельно объединяет все пакеты
@@ -34,16 +33,10 @@ app.use(
   }),
 );
 
-app.use(requestLogger); // подключаем логгер запросов
-
 // подключение роутера к базе данных, чтобы можно было
 // взаимодействовать через API.
 
-app.use('/', require('./routes/authorization'));
-
-app.use('/users', auth, require('./routes/user'));
-
-app.use('/movies', auth, require('./routes/movie'));
+app.use('/', require('./routes'));
 
 // проверка на несуществующий роут
 app.use('*', (req, res, next) => {
@@ -52,7 +45,7 @@ app.use('*', (req, res, next) => {
 
 // Он принимает на вход два аргумента: строку с запросом;
 // колбэк, предписывающий, что нужно делать, если такой запрос пришёл на сервер.
-
+app.use(errorLogger); // подключаем логгер ошибок
 app.use(celebreteErrors);
 app.use(errorHandler);
 // начинаем прослушивание подключений на 3000 порту

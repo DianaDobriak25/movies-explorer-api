@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const { userCreate, login } = require('../controllers/user');
+const { SIGNUP_SCHEMA, SIGNIN_SCHEMA } = require('../utils/validator-schemas');
 // Валидация приходящих на сервер данных.
 // Такой мидлвэр валидирует тело запроса.
 // В нём должны быть предписанные эти поля из models
@@ -9,20 +10,13 @@ const { userCreate, login } = require('../controllers/user');
 // создаёт пользователя с переданными в теле
 // email, password и name
 router.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(true),
-    email: Joi.string().required(true).lowercase().email(),
-    password: Joi.string().required(true),
-  }),
+  body: SIGNUP_SCHEMA,
 }), userCreate);
 
 // проверяет переданные в теле почту и пароль
 // и возвращает JWT
 router.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required(true).lowercase().email(),
-    password: Joi.string().required(true),
-  }),
+  body: SIGNIN_SCHEMA,
 }), login);
 
 module.exports = router;

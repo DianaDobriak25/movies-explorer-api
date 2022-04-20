@@ -33,7 +33,7 @@ const MOVIES_CREATE_SCHEMA = Joi.object().keys({
   year: Joi.string().required(true),
   description: Joi.string().required(true),
   image: Joi.string().required(true).custom(validateURL),
-  trailer: Joi.string().required(true).custom(validateURL),
+  trailerLink: Joi.string().required(true).custom(validateURL),
   nameRU: Joi.string().required(true),
   nameEN: Joi.string().required(true),
   thumbnail: Joi.string().required(true).custom(validateURL),

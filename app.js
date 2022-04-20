@@ -12,6 +12,13 @@ const NotFoundError = require('./errors/not-found-error');
 
 // создаем приложение
 const app = express();
+
+// Модуль Helmet csp помогает устанавливать политику безопасности контента
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+  },
+}));
 // подключаемся к серверу mongo(БД)
 mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
@@ -24,19 +31,10 @@ app.use(apiLimiter);
 // мидлвэр body-parser. Он самостоятельно объединяет все пакеты
 app.use(bodyParser.json());
 
-// csp - предотвращение межсайтовых вмешательств через задание заголовка Content-Security-Policy
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      objectSrc: ['none'],
-    },
-  }),
-);
-
 // подключение роутера к базе данных, чтобы можно было
 // взаимодействовать через API.
 
-app.use('/', require('./routes'));
+app.use('/api/', require('./routes'));
 
 // проверка на несуществующий роут
 app.use('*', (req, res, next) => {

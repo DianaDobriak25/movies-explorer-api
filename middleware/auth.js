@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken'); // импортируем модуль jsonwebtoken
 const { JWT_SECRET } = require('../config');
 const UnauthorizedError = require('../errors/unauthorized-error');
+const { UNAUTHORIZED_ERROR_MESSAGE } = require('../utils/constants');
 
 // мидлвэр для авторизации
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) throw new UnauthorizedError('Необходима авторизация');
+  if (!authorization) throw new UnauthorizedError(UNAUTHORIZED_ERROR_MESSAGE);
   // Вырезаем Bearer из токена
   const token = authorization.replace('Bearer ', '');
   try {
@@ -15,7 +16,7 @@ const auth = (req, res, next) => {
     // пейлоуд токена в объект запроса и вызывать next
     req.user = payload;
   } catch (err) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    next(new UnauthorizedError(UNAUTHORIZED_ERROR_MESSAGE));
   }
   next();
 };

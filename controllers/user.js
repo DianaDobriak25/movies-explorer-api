@@ -5,19 +5,20 @@ const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ConflictError = require('../errors/conflict-error');
 const { JWT_SECRET } = require('../config');
+const { BAD_REQUEST_ERROR_MESSAGE, CONFLICT_USERS_ERROR_MESSAGE, NOT_FOUND_ERROR_MESSAGE } = require('../utils/constants');
 
 // Обработчик запроса и ошибок.
 // сработает при GET-запросе, возвращает информацию о пользователе (email и имя)
 module.exports.usersFindInform = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Ресурс не найден'))
+    .orFail(new NotFoundError(NOT_FOUND_ERROR_MESSAGE))
     .then((user) => res.send({
       email: user.email,
       name: user.name,
     }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Неверный формат данных'));
+        next(new BadRequestError(BAD_REQUEST_ERROR_MESSAGE));
       } else {
         next(err); // иначе будет выведена ошибка 500
       }
@@ -36,15 +37,15 @@ module.exports.usersUpdateInform = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
     },
   )
-    .orFail(new NotFoundError('Ресурс не найден'))
+    .orFail(new NotFoundError(NOT_FOUND_ERROR_MESSAGE))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Неверный формат данных'));
+        next(new BadRequestError(BAD_REQUEST_ERROR_MESSAGE));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       } else if (err.code === 11000) {
-        next(new ConflictError('Пользователь с данным email уже существует'));
+        next(new ConflictError(CONFLICT_USERS_ERROR_MESSAGE));
       } else {
         next(err); // иначе будет выведена ошибка 500
       }
@@ -77,7 +78,7 @@ module.exports.userCreate = (req, res, next) => {
           if (err.name === 'ValidationError') {
             next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
           } else if (err.code === 11000) {
-            next(new ConflictError('Пользователь с данным email уже существует'));
+            next(new ConflictError(CONFLICT_USERS_ERROR_MESSAGE));
           } else {
             next(err); // иначе будет выведена ошибка 500
           }

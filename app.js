@@ -2,28 +2,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const apiLimiter = require('./rate-limiter');
 const errorHandler = require('./middleware/error-handler');
 const { PORT, DB_ADDRESS } = require('./config');
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const celebreteErrors = require('./middleware/celebrete-errors');
 const NotFoundError = require('./errors/not-found-error');
+const cors = require('./middleware/cors');
 
 // создаем приложение
 const app = express();
-
-// Модуль Helmet csp помогает устанавливать политику безопасности контента
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-  },
-}));
 // подключаемся к серверу mongo(БД)
 mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+app.use(cors);
 
 app.use(requestLogger); // подключаем логгер запросов
 app.use(apiLimiter);
